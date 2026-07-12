@@ -13,74 +13,60 @@
 (function () {
   'use strict';
 
-  const { useState, useEffect, useRef, createElement: h } = React;
+  function initCircularText(mountNode) {
+    if (!mountNode) return;
 
-  const HOVER_CLASS_MAP = {
-    speedUp: 'hover-speed-up',
-    slowDown: 'hover-slow-down',
-    pause: 'hover-pause',
-    goBonkers: 'hover-go-bonkers',
-  };
+    var text = mountNode.dataset.text || 'UMBBM MENTARAMAN*2026*';
+    var radius = Number(mountNode.dataset.radius) || 67;
+    var spinDuration = Number(mountNode.dataset.spinDuration) || 25;
+    var onHover = mountNode.dataset.onHover || 'speedUp';
+    var className = mountNode.dataset.className || '';
 
-  function CircularText({
-    text = 'UMBBM Mentaraman*2026*',
-    spinDuration = 20,
-    onHover = 'speedUp',
-    className = '',
-    radius = 85,
-  }) {
-    const [hovering, setHovering] = useState(false);
-    const letters = Array.from(text);
-
-    const hoverClass = hovering && onHover ? HOVER_CLASS_MAP[onHover] || '' : '';
-
-    const style = {
-      '--spin-duration': spinDuration + 's',
+    var hoverClassMap = {
+      speedUp: 'hover-speed-up',
+      slowDown: 'hover-slow-down',
+      pause: 'hover-pause',
+      goBonkers: 'hover-go-bonkers',
     };
 
-    const spans = letters.map(function (letter, i) {
-      const rotationDeg = (360 / letters.length) * i;
-      const transform = 'rotateZ(' + rotationDeg + 'deg) translateY(' + (-radius) + 'px)';
+    var container = document.createElement('div');
+    container.className = 'circular-text ' + className;
+    container.style.setProperty('--spin-duration', spinDuration + 's');
 
-      return h(
-        'span',
-        {
-          key: i,
-          style: { transform: transform, WebkitTransform: transform },
-        },
-        letter
-      );
+    if (onHover && hoverClassMap[onHover]) {
+      var hoverClass = hoverClassMap[onHover];
+      container.addEventListener('mouseenter', function() {
+        container.classList.add(hoverClass);
+      });
+      container.addEventListener('mouseleave', function() {
+        container.classList.remove(hoverClass);
+      });
+    }
+
+    var letters = Array.from(text);
+    letters.forEach(function(letter, i) {
+      var rotationDeg = (360 / letters.length) * i;
+      var transform = 'rotateZ(' + rotationDeg + 'deg) translateY(' + (-radius) + 'px)';
+      
+      var span = document.createElement('span');
+      span.style.transform = transform;
+      span.style.WebkitTransform = transform;
+      span.textContent = letter;
+      
+      container.appendChild(span);
     });
 
-    return h(
-      'div',
-      {
-        className: ['circular-text', className, hoverClass].filter(Boolean).join(' '),
-        style: style,
-        onMouseEnter: function () { setHovering(true); },
-        onMouseLeave: function () { setHovering(false); },
-      },
-      spans
-    );
+    mountNode.appendChild(container);
   }
 
-  // --- Mount ---
-  var mountNode = document.getElementById('circular-text-root');
-  if (mountNode) {
-    var props = {};
-    try {
-      // Read props from data attributes if provided
-      if (mountNode.dataset.text) props.text = mountNode.dataset.text;
-      if (mountNode.dataset.spinDuration) props.spinDuration = Number(mountNode.dataset.spinDuration);
-      if (mountNode.dataset.onHover) props.onHover = mountNode.dataset.onHover;
-      if (mountNode.dataset.className) props.className = mountNode.dataset.className;
-      if (mountNode.dataset.radius) props.radius = Number(mountNode.dataset.radius);
-    } catch (e) { /* use defaults */ }
+  // Auto-init on DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', function() {
+    var root = document.getElementById('circular-text-root');
+    if (root) {
+      initCircularText(root);
+    }
+  });
 
-    var root = ReactDOM.createRoot(mountNode);
-    root.render(h(CircularText, props));
-  }
-
-  // Expose globally so other scripts can mount additional instances
-  window.CircularText = CircularText;
+  // Expose globally
+  window.initCircularText = initCircularText;
 })();

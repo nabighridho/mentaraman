@@ -528,6 +528,8 @@
     <!-- Babel compiler for inline script JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <!-- Circular text component script -->
+
     <!-- Mount React Component with Babel compiler -->
     <script type="text/babel" src="{{ asset('js/dusun-explorer.js') }}"></script>
 
