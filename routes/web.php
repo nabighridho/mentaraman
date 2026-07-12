@@ -10,3 +10,6 @@ Route::get('/karakteristik', [PageController::class, 'karakteristik'])->name('ka
 Route::get('/kegiatan', [PageController::class, 'kegiatan'])->name('kegiatan');
 Route::get('/pendidikan', [PageController::class, 'pendidikan'])->name('pendidikan');
 Route::get('/pojok-baca', [PageController::class, 'pojokBaca'])->name('pojok-baca');
+Route::redirect('/interaktif', '/');
+
+

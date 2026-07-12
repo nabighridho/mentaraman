@@ -28,6 +28,7 @@
     initDualThemeSwitcher();
     initImageScroller();
     initCinematicReveals();
+    initCanvasBackground(lenis);
   });
 
   /* ---- LENIS SMOOTH SCROLL ---- */
@@ -41,7 +42,7 @@
       mouseMultiplier: 1.0,
       smoothTouch: false, // Keep native touch scroll on mobile to avoid lag
       touchMultiplier: 2.0,
-      infinite: false,
+      infinite: false, // Managed manually in loop
     });
 
     // Synchronize Lenis with GSAP ScrollTrigger
@@ -245,8 +246,9 @@
     // Crossfade panels on scroll
     panels.forEach((panel, i) => {
       if (i === 0) return; // First panel starts visible
-      const start = (i / panels.length) * 100;
-      const end = ((i + 0.3) / panels.length) * 100;
+      // Divide the 75% sticky scroll space (300vh out of 400vh) by 3 panels = 25% each
+      const start = (i * 25);
+      const end   = ((i + 0.3) * 25); // Fade in slightly quickly
 
       gsap.to(panel, {
         opacity: 1,
@@ -274,33 +276,29 @@
       }
     });
 
-    // Captions fade in/out per segment
+    // Captions fade in → hold → fade out
     captions.forEach((cap, i) => {
-      const segStart = i * 0.33;
-      const segEnd = (i + 1) * 0.33;
+      const segStart = i * 0.25;
+      const segEnd   = (i + 1) * 0.25;
 
-      gsap.fromTo(cap,
-        { opacity: 0, yPercent: 30 },
-        {
-          opacity: 1, yPercent: 0, ease: 'power2.out',
-          scrollTrigger: {
-            trigger: scrubSec,
-            start: `top+=${segStart * 100}% top`,
-            end: `top+=${(segStart + 0.12) * 100}% top`,
-            scrub: true
-          }
-        }
-      );
+      // Reset any previous state, ensure visibility is handled by GSAP
+      gsap.set(cap, { autoAlpha: 0 });
 
-      gsap.to(cap, {
-        opacity: 0, yPercent: -30, ease: 'power2.in',
+      const startString = i === 0 ? "top top" : `top+=${segStart * 100}% top`;
+      const endString   = `top+=${segEnd * 100}% top`;
+
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: scrubSec,
-          start: `top+=${(segEnd - 0.1) * 100}% top`,
-          end: `top+=${segEnd * 100}% top`,
-          scrub: true
+          start: startString,
+          end: endString,
+          scrub: 1,
         }
       });
+
+      tl.fromTo(cap, { autoAlpha: 0 }, { autoAlpha: 1, ease: 'none', duration: 0.25 })
+        .to(cap, { autoAlpha: 1, ease: 'none', duration: 0.5 })
+        .to(cap, { autoAlpha: 0, ease: 'none', duration: 0.25 });
     });
   }
 
@@ -330,6 +328,148 @@
           }
         }
       );
+    });
+  }
+
+  /* ---- SCROLL-DRIVEN BACKGROUND CANVAS ENGINE (IGLOO.INC CONCEPT) ---- */
+  function initCanvasBackground(lenis) {
+    const frameCount = 240;
+    const images = [];
+    let loadedCount = 0;
+    
+    const loaderPct = document.getElementById('preloadPercentage');
+    const loaderOverlay = document.getElementById('interactiveLoader');
+    const canvas = document.getElementById('scrub-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    const getFrameUrl = index => `/images/infinite-scroll-sequence/frame_${index.toString().padStart(3, '0')}.webp`;
+    
+    // Setup canvas size
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      render(scrollState.frame);
+    }
+    window.addEventListener('resize', resize);
+    
+    const scrollState = { frame: 0 };
+    
+    function render(frameIndex) {
+      const roundedIndex = Math.floor(frameIndex);
+      const img = images[roundedIndex];
+      if (img && img.complete) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawImageCover(ctx, img, 0, 0, canvas.width, canvas.height);
+      }
+    }
+    
+    // CSS object-fit cover implementation on Canvas
+    function drawImageCover(ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0.5) {
+      const r = Math.min(w / img.width, h / img.height);
+      let nw = img.width * r;
+      let nh = img.height * r;
+      if (nw < w) {
+        const s = w / nw;
+        nw *= s;
+        nh *= s;
+      }
+      if (nh < h) {
+        const s = h / nh;
+        nw *= s;
+        nh *= s;
+      }
+      const cx = (w - nw) * offsetX;
+      const cy = (h - nh) * offsetY;
+      ctx.drawImage(img, cx + x, cy + y, nw, nh);
+    }
+    
+    // Status text updates for preloader
+    const STATUS_UPDATES = [
+      { threshold: 0, text: 'Memulai engine visual...' },
+      { threshold: 20, text: 'Memetakan sektor agraris...' },
+      { threshold: 45, text: 'Menghubungkan arus bahari...' },
+      { threshold: 70, text: 'Menyelaraskan gerak gelombang...' },
+      { threshold: 90, text: 'Menyiapkan pengalaman imersif...' },
+      { threshold: 100, text: 'Sinkronisasi selesai!' }
+    ];
+
+    // loadedCount already declared at top of preload()
+    let actualProgress = 0;
+    let visualProgress = 0;
+
+    // Smooth visual loading animation so it doesn't jump instantly to 100
+    const animatePreloader = () => {
+      if (visualProgress < actualProgress) {
+        // Increment by a fixed amount + easing to make it take ~1.5s even if cached
+        visualProgress += 1.2 + ((actualProgress - visualProgress) * 0.05);
+        if (visualProgress > actualProgress) visualProgress = actualProgress;
+        
+        const progress = Math.round(visualProgress);
+        
+        if (loaderPct) loaderPct.textContent = progress;
+        
+        const progressFill = document.getElementById('preloadProgressFill');
+        if (progressFill) progressFill.style.width = progress + '%';
+      }
+      
+      if (visualProgress >= 100 && actualProgress >= 100) {
+        setTimeout(() => {
+          if (loaderOverlay) loaderOverlay.classList.add('fade-out');
+          resize();
+          
+          // Bind scroll trigger to page scroll
+          gsap.to(scrollState, {
+            frame: frameCount - 1,
+            snap: 'frame',
+            ease: 'none',
+            scrollTrigger: {
+              trigger: 'body',
+              start: 'top top',
+              end: 'bottom bottom',
+              scrub: 1.5
+            },
+            onUpdate: () => render(scrollState.frame)
+          });
+          
+          // Add scroll animation indicator
+          gsap.to('.hud-loop-indicator', { opacity: 1, duration: 1, delay: 0.5 });
+        }, 400); // Small visual pause at 100%
+        return; // stop loop
+      }
+      requestAnimationFrame(animatePreloader);
+    };
+    
+    // Start animation loop
+    requestAnimationFrame(animatePreloader);
+
+    // Preload images
+    for (let i = 0; i < frameCount; i++) {
+      const img = new Image();
+      img.onload = () => {
+        loadedCount++;
+        actualProgress = (loadedCount / frameCount) * 100;
+      };
+      img.onerror = () => {
+        loadedCount++; // Count failed images as loaded to prevent stuck loader
+        actualProgress = (loadedCount / frameCount) * 100;
+      };
+      img.src = getFrameUrl(i);
+      images.push(img);
+    }
+
+    // Enable scroll wrap loop
+    lenis.on('scroll', (e) => {
+      const scroll = e.scroll;
+      const limit = e.limit;
+      
+      if (scroll >= limit - 3 && e.direction === 1) {
+        lenis.scrollTo(5, { immediate: true });
+        if (window.ScrollTrigger) window.ScrollTrigger.update();
+      } else if (scroll <= 3 && e.direction === -1) {
+        lenis.scrollTo(limit - 5, { immediate: true });
+        if (window.ScrollTrigger) window.ScrollTrigger.update();
+      }
     });
   }
 

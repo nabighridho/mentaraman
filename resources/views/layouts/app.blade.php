@@ -122,11 +122,37 @@
         </div>
     </footer>
 
+    <!-- Creative Floating Widget (Back to Top & Watermark Cover) -->
+    <a href="javascript:void(0)" id="creativeToTop" class="creative-totop" title="Kembali ke Atas">
+        <div class="totop-ring"></div>
+        <div class="totop-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+        </div>
+    </a>
+
     <!-- GSAP, ScrollTrigger, Lenis Smooth Scroll -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toTopBtn = document.getElementById('creativeToTop');
+            if (toTopBtn) {
+                toTopBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Auto ke atas tapi jangan mentok (scroll to 20px instead of 0)
+                    if (window.lenis) {
+                        window.lenis.scrollTo(20, { duration: 1.5 });
+                    } else {
+                        window.scrollTo({ top: 20, behavior: 'smooth' });
+                    }
+                });
+            }
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

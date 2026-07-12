@@ -3,6 +3,11 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/immersive.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/interaktif.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/circular-text.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Javanese:wght@500;700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
         /* Typography refinements */
         .text-gradient-gold {
@@ -31,6 +36,31 @@
 @endpush
 
 @section('content')
+
+    <!-- Fixed Background Canvas -->
+    <div class="canvas-background-container">
+        <canvas id="scrub-canvas"></canvas>
+    </div>
+    
+    <!-- Simple Preloader -->
+    <div class="interactive-loader" id="interactiveLoader">
+        <div class="loader-container">
+            <div class="simple-loader-logo">
+                <img src="{{ asset('images/logo-kkn.png') }}" alt="Desa Mentaraman Logo" class="pulse-logo">
+            </div>
+            
+            <div class="loader-branding">
+                <div class="loader-title-main">MENTARAMAN</div>
+            </div>
+
+            <div class="loader-telemetry">
+                <div class="loader-percentage-text" id="preloadPercentage">0</div>
+                <div class="loader-progress-track">
+                    <div class="loader-progress-fill" id="preloadProgressFill"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {{-- MODERN PARALLAX HERO --}}
     <section class="parallax-hero">
@@ -67,7 +97,10 @@
 
             <!-- Hero Content -->
             <div class="hero-content-overlay">
-                <img src="{{ asset('images/logo-kkn.png') }}" alt="Logo KKN UM Mentaraman" class="hero-logo">
+                <div class="hero-circular-wrapper">
+                    <div id="circular-text-root" data-text="UMBBM MENTARAMAN*2026*" data-radius="67" data-spin-duration="25" data-on-hover="speedUp"></div>
+                    <img src="{{ asset('images/logo-kkn.png') }}" alt="Logo KKN UM Mentaraman" class="hero-logo">
+                </div>
                 <h1 class="hero-main-title">Desa Mentaraman</h1>
                 <p class="hero-tagline">Kearifan Agraris & Pesisir Bahari</p>
                 <p class="hero-loc">Kec. Donomulyo &bull; Kab. Malang &bull; Jawa Timur</p>
@@ -92,35 +125,35 @@
             </div>
 
             <div class="grid-2" style="gap:48px; align-items:center;">
-                <div class="cinema-reveal-left" style="line-height:1.9; font-size:1.05rem; color:var(--brown-accent);">
-                    <p style="margin-bottom:18px;">
+                <div class="cinema-reveal-left glass-card-light" style="line-height:1.9; font-size:1.05rem; padding: 32px; border-radius: 20px; border: 1px solid rgba(184, 150, 62, 0.2) !important;">
+                    <p style="margin-bottom:18px; color: #f4efe6 !important;">
                         Nama <strong>&ldquo;Mentaraman&rdquo;</strong> berakar dari kata <em>Mataraman</em>. Menelusuri
                         sejarah, wilayah ini dibuka oleh para pelarian dan pengikut Kerajaan Mataram Islam pada era 1800-an
                         yang melakukan babat alas di perbukitan selatan Malang demi memulai peradaban baru yang berdaulat.
                     </p>
-                    <p style="margin-bottom:18px;">
+                    <p style="margin-bottom:18px; color: #f4efe6 !important;">
                         Kini, Mentaraman berdiri anggun di ketinggian <strong>&plusmn;300 mdpl</strong>. Lanskap geografisnya
                         sangat unik, memadukan hijaunya hutan tropis Perhutani, suburnya hamparan sawah terasering agraris,
                         hingga deburan ombak eksotis dari <strong>Pantai Jonggring Saloko</strong> di pesisir selatan Jawa.
                     </p>
-
-                    <!-- Border cards details -->
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:28px;">
-                        <div class="card glass-card-light" style="padding:16px; border-left:4px solid var(--forest-mid) !important;">
-                            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--forest-mid); font-weight:700;">Batas Utara</span>
-                            <p style="margin:4px 0 0; font-size:0.95rem; font-weight:600;">Desa Donomulyo</p>
+                    
+                    <!-- Border details mapped visually inside glass block -->
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px;">
+                        <div style="padding:14px; border-left:4px solid var(--forest-mid) !important; background: rgba(255, 255, 255, 0.05); border-radius: 6px;">
+                            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#b8963e; font-weight:800; display:block; margin-bottom:4px;">Batas Utara</span>
+                            <p style="margin:0; font-size:0.95rem; font-weight:600; color:#f4efe6 !important;">Desa Donomulyo</p>
                         </div>
-                        <div class="card glass-card-light" style="padding:16px; border-left:4px solid var(--gold-accent) !important;">
-                            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--gold-accent); font-weight:700;">Batas Selatan</span>
-                            <p style="margin:4px 0 0; font-size:0.95rem; font-weight:600;">Samudera Hindia</p>
+                        <div style="padding:14px; border-left:4px solid var(--gold-accent) !important; background: rgba(255, 255, 255, 0.05); border-radius: 6px;">
+                            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#b8963e; font-weight:800; display:block; margin-bottom:4px;">Batas Selatan</span>
+                            <p style="margin:0; font-size:0.95rem; font-weight:600; color:#f4efe6 !important;">Samudera Hindia</p>
                         </div>
-                        <div class="card glass-card-light" style="padding:16px; border-left:4px solid var(--earth-warm) !important;">
-                            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--earth-warm); font-weight:700;">Batas Barat</span>
-                            <p style="margin:4px 0 0; font-size:0.95rem; font-weight:600;">Desa Purwodadi</p>
+                        <div style="padding:14px; border-left:4px solid var(--earth-warm) !important; background: rgba(255, 255, 255, 0.05); border-radius: 6px;">
+                            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#b8963e; font-weight:800; display:block; margin-bottom:4px;">Batas Barat</span>
+                            <p style="margin:0; font-size:0.95rem; font-weight:600; color:#f4efe6 !important;">Desa Purwodadi</p>
                         </div>
-                        <div class="card glass-card-light" style="padding:16px; border-left:4px solid var(--brown-accent) !important;">
-                            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--brown-accent); font-weight:700;">Batas Timur</span>
-                            <p style="margin:4px 0 0; font-size:0.95rem; font-weight:600;">Desa Kedungsalam</p>
+                        <div style="padding:14px; border-left:4px solid var(--brown-accent) !important; background: rgba(255, 255, 255, 0.05); border-radius: 6px;">
+                            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#b8963e; font-weight:800; display:block; margin-bottom:4px;">Batas Timur</span>
+                            <p style="margin:0; font-size:0.95rem; font-weight:600; color:#f4efe6 !important;">Desa Kedungsalam</p>
                         </div>
                     </div>
                 </div>
@@ -455,25 +488,33 @@
     {{-- KKN PROGRAM SPONSOR & REDIRECT --}}
     <section class="section section-ivory cinema-section" style="padding: 120px 0; text-align: center; position: relative;">
         <div class="container section-content cinema-reveal">
-            <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--forest-dark);">Program Kerja KKN Kelompok 2</h2>
-            <p style="max-width: 650px; margin: 16px auto 36px; color: var(--brown-accent); line-height: 1.8;">
-                Digitalisasi profil desa ini merupakan bentuk kontribusi nyata Kuliah Kerja Nyata (KKN) Universitas Negeri
-                Malang Kelompok 2 demi mendukung keterbukaan informasi pariwisata dan administrasi Desa Mentaraman.
-            </p>
+            <div class="section-header" style="margin: 0 auto 40px; max-width: 700px;">
+                <h2>Program Kerja KKN Kelompok 2</h2>
+                <p>
+                    Digitalisasi profil desa ini merupakan bentuk kontribusi nyata Kuliah Kerja Nyata (KKN) Universitas Negeri
+                    Malang Kelompok 2 demi mendukung keterbukaan informasi pariwisata dan administrasi Desa Mentaraman.
+                </p>
+            </div>
 
             <!-- Dynamic floating animation logos -->
-            <div style="display: flex; justify-content: center; gap: 32px; align-items: center; margin-bottom: 40px; flex-wrap: wrap;">
-                <div class="float-anim" style="padding: 12px; background: #fff; border-radius: 50%; box-shadow: var(--shadow-md); display: flex;">
-                    <img src="{{ asset('images/logo-kkn.png') }}" alt="Logo KKN UM Mentaraman" style="height: 90px; width: 90px; object-fit: contain;">
+            <div style="display: flex; justify-content: center; gap: 36px; align-items: center; margin-bottom: 40px; flex-wrap: wrap;">
+                <!-- KKN Logo -->
+                <div class="float-anim glass-logo-container" style="width: 148px; height: 148px; min-width: 148px; min-height: 148px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(10, 16, 12, 0.6); border: 2px solid rgba(184, 150, 62, 0.45); box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 0 0 4px rgba(184,150,62,0.08);">
+                    <div style="width: 118px; height: 118px; border-radius: 50%; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <img src="{{ asset('images/logo-kkn.png') }}" alt="Logo KKN UM Mentaraman" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    </div>
                 </div>
-                <div class="float-anim-delay" style="padding: 12px; background: #fff; border-radius: 50%; box-shadow: var(--shadow-md); display: flex;">
-                    <img src="{{ asset('images/logo-um.png') }}" alt="Logo Universitas Negeri Malang" style="height: 90px; width: 90px; object-fit: contain;">
+                <!-- UM Logo -->
+                <div class="float-anim-delay glass-logo-container" style="width: 148px; height: 148px; min-width: 148px; min-height: 148px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(10, 16, 12, 0.6); border: 2px solid rgba(184, 150, 62, 0.45); box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 0 0 4px rgba(184,150,62,0.08);">
+                    <div style="width: 118px; height: 118px; border-radius: 50%; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <img src="{{ asset('images/logo-um.png') }}" alt="Logo Universitas Negeri Malang" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    </div>
                 </div>
             </div>
 
             <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
                 <a href="/pojok-baca" class="btn btn-primary" style="background: var(--gold); border: none; box-shadow: 0 4px 14px rgba(184, 150, 62, 0.3);">Kunjungi Pojok Baca &rarr;</a>
-                <a href="/pendidikan" class="btn btn-outline" style="border-color: var(--forest-mid); color: var(--forest-mid);">Satuan Pendidikan Desa</a>
+                <a href="/pendidikan" class="btn btn-outline" style="border-color: var(--gold-light); color: var(--gold-light);">Satuan Pendidikan Desa</a>
             </div>
         </div>
     </section>
@@ -489,6 +530,9 @@
 
     <!-- Mount React Component with Babel compiler -->
     <script type="text/babel" src="{{ asset('js/dusun-explorer.js') }}"></script>
+
+    <!-- Circular text component script -->
+    <script src="{{ asset('js/circular-text.js') }}"></script>
 
     <!-- Immersive engine (Lenis + GSAP Parallax & Scrubbing) -->
     <script src="{{ asset('js/immersive.js') }}"></script>

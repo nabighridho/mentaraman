@@ -1,0 +1,531 @@
+/* ============================================================
+   INTERACTIVE CANVAS BACKGROUND STYLES (IGLOO.INC CONCEPT)
+   Desa Mentaraman - Kearifan Agraris & Pesisir Bahari
+   ============================================================ */
+
+/* Fixed background canvas viewport */
+.canvas-background-container {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background: #060907;
+}
+
+.canvas-background-container canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9; /* Set higher opacity for vivid video-like clarity */
+}
+
+/* Sci-fi grid line overlay */
+.hud-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-size: 60px 60px;
+  background-image: 
+    linear-gradient(to right, rgba(184, 150, 62, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(184, 150, 62, 0.02) 1px, transparent 1px);
+  pointer-events: none;
+}
+
+/* Loop indicator in bottom corner */
+.hud-loop-indicator-fixed {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 18, 14, 0.85);
+  border: 1px solid rgba(184, 150, 62, 0.25);
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 10px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1.5px;
+  color: #4fa876;
+  text-shadow: 0 0 5px rgba(79, 168, 118, 0.4);
+  box-shadow: 0 0 10px rgba(61, 107, 79, 0.2);
+  z-index: 100;
+  pointer-events: none;
+}
+
+.loop-blink-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #4fa876;
+  animation: neon-blink 1.2s infinite alternate;
+}
+
+@keyframes neon-blink {
+  0% { opacity: 0.2; box-shadow: none; }
+  100% { opacity: 1; box-shadow: 0 0 8px #4fa876; }
+}
+
+/* Preloader overlay */
+/* ============================================================
+   CYBER-JAVANESE PRELOADER (RADAR & NEON GUNUNGAN HUD)
+   ============================================================ */
+
+.interactive-loader {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #132a1b 0%, #030805 100%);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: opacity 1s cubic-bezier(0.85, 0, 0.15, 1), visibility 1s ease;
+}
+
+.interactive-loader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+/* Simple Loader Logo */
+.simple-loader-logo {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pulse-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  animation: pulse-logo 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15));
+}
+
+@keyframes pulse-logo {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Title Branding reveal */
+.loader-branding {
+  text-align: center;
+  margin-bottom: 25px;
+  z-index: 5;
+}
+
+.loader-title-main {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  color: #f4efe6;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+  margin-bottom: 4px;
+}
+
+
+/* Telemetry scan controls */
+.loader-telemetry {
+  width: 300px;
+  text-align: center;
+  z-index: 5;
+}
+
+.loader-percentage-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 28px;
+  font-weight: 900;
+  color: #b8963e;
+  text-shadow: 0 0 15px rgba(184, 150, 62, 0.4);
+  margin-bottom: 12px;
+}
+
+.loader-percentage-text::after {
+  content: '%';
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Glowing Progress Bar */
+.loader-progress-track {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+.loader-progress-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0%;
+  background: linear-gradient(90deg, #4fa876, #b8963e);
+  box-shadow: 0 0 10px rgba(79, 168, 118, 0.5);
+  transition: width 0.1s linear;
+}
+
+
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Disable body scroll when loader is active */
+body.loading-lock {
+  overflow: hidden !important;
+}
+
+/* ============================================================
+   HERO TRANSPARENCY & STATIC LAYERS HIDING
+   ============================================================ */
+
+/* Make the hero section wrapper transparent to expose the canvas background */
+.parallax-hero {
+  background: transparent !important;
+}
+
+.parallax-viewport {
+  background: transparent !important;
+}
+
+/* Hide all original static parallax illustration layers */
+.parallax-layer {
+  display: none !important;
+}
+
+/* Ensure the hero text content overlay is always visible and floats on top */
+.hero-content-overlay {
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  z-index: 50 !important;
+}
+
+/* ============================================================
+   GLASSMORPHISM TRANSPARENCY FOR ALL SECTIONS
+   ============================================================ */
+
+/* Make all content sections completely transparent to show the canvas scroll background */
+.section-cream,
+.section-ivory,
+.section-dark,
+.dual-theme-section,
+.scrub-section {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: none !important;
+}
+
+/* Hide background images of the horizontal scroller panels so the canvas background shows through */
+.scrub-panel {
+  background-image: none !important;
+  background: transparent !important;
+}
+
+/* Footer Section - keep it translucent to ground the page, but let the canvas peek through */
+footer {
+  background: rgba(6, 11, 8, 0.75) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-top: 1px solid rgba(184, 150, 62, 0.1) !important;
+}
+
+/* ============================================================
+   READABILITY ADJUSTMENTS FOR TEXT OVER DARK CANVAS
+   ============================================================ */
+
+/* Headings color in transparent sections */
+.section h2,
+.section-cream h2,
+.section-ivory h2,
+.dual-theme-section h2,
+.scrub-section h2 {
+  color: #b8963e !important; /* Premium Gold color */
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Paragraph color in transparent sections */
+.section p,
+.section-cream p,
+.section-ivory p,
+.dual-theme-section p,
+.scrub-section p {
+  color: #f4efe6 !important; /* Premium cream/white color */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* ============================================================
+   DARK GLASS CARD STYLING (REPLACES WHITE BACKGROUNDS)
+   ============================================================ */
+
+/* Style light glass cards as translucent dark agraris glass to pop on sunset */
+.glass-card-light {
+  background: rgba(14, 22, 17, 0.5) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(184, 150, 62, 0.15) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Convert all internal text of glass cards to light color for high readability */
+.glass-card-light *,
+.glass-card-light h2,
+.glass-card-light h3,
+.glass-card-light p,
+.glass-card-light span,
+.glass-card-light strong {
+  color: #f4efe6 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Keep card icon backgrounds gold or green accent */
+.glass-card-light .card-icon {
+  background: rgba(184, 150, 62, 0.15) !important;
+  border: 1px solid rgba(184, 150, 62, 0.3) !important;
+}
+
+/* For color-labeled headings inside boundary card borders */
+.glass-card-light span[style*="color:var(--forest-mid)"],
+.glass-card-light span[style*="color:var(--gold-accent)"],
+.glass-card-light span[style*="color:var(--earth-warm)"],
+.glass-card-light span[style*="color:var(--brown-accent)"],
+.glass-card-light span[style*="color: var(--forest-mid)"],
+.glass-card-light span[style*="color: var(--gold-accent)"],
+.glass-card-light span[style*="color: var(--earth-warm)"],
+.glass-card-light span[style*="color: var(--brown-accent)"] {
+  color: #b8963e !important;
+  font-weight: 800 !important;
+}
+
+/* ============================================================
+   REACT DUSUN EXPLORER - TRANSPARENT GLASS CONVERSION
+   ============================================================ */
+
+/* Main outer wrapper box styling */
+.dusun-explorer-wrapper {
+  background: rgba(10, 18, 14, 0.45) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(184, 150, 62, 0.18) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Inner layout panels styling */
+.explorer-grid > div {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(184, 150, 62, 0.1) !important;
+  box-shadow: none !important;
+}
+
+/* Overriding text colors to white/light inside the explorer */
+.dusun-explorer-wrapper h3,
+.dusun-explorer-wrapper h4,
+.dusun-explorer-wrapper p,
+.dusun-explorer-wrapper span,
+.dusun-explorer-wrapper div {
+  color: #f4efe6 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Accent headers and category keys */
+.dusun-explorer-wrapper span[style*="color: rgb"],
+.dusun-explorer-wrapper span[style*="color:#888"],
+.dusun-explorer-wrapper span[style*="color:#777"],
+.dusun-explorer-wrapper span[style*="color: #888"],
+.dusun-explorer-wrapper span[style*="color: #777"] {
+  color: #b8963e !important;
+}
+
+/* Navigation buttons (non-active tabs) */
+.dusun-explorer-wrapper button {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(244, 239, 230, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.dusun-explorer-wrapper button:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #fff !important;
+}
+
+/* Active navigation tab button styling */
+.dusun-explorer-wrapper button:not([style*="box-shadow: none"]):not([style*="boxShadow: \"none\""]) {
+  background: #3d6b4f !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  border-color: transparent !important;
+}
+
+/* Progress track bar bg */
+.dusun-explorer-wrapper div[style*="height: 8px"],
+.dusun-explorer-wrapper div[style*="height:8px"] {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* ============================================================
+   KKN LOGO WRAPPERS & BRANDING BACKGROUND OVERRIDES
+   ============================================================ */
+
+.float-anim,
+.float-anim-delay {
+  background: rgba(255, 255, 255, 0.8) !important; /* Semi-transparent light glass so logos pop cleanly */
+  border: 1px solid rgba(184, 150, 62, 0.25) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ============================================================
+   CIRCULAR LOGO WRAPPER & FLOAT ANIMATION
+   ============================================================ */
+.hero-circular-wrapper {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 0 auto 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: logo-float 6s ease-in-out infinite;
+}
+
+/* Center the logo inside the wrapper */
+.hero-circular-wrapper .hero-logo {
+  position: absolute;
+  width: 110px !important;
+  height: 110px !important;
+  margin: 0 !important;
+  z-index: 2;
+  animation: none !important; /* Disable individual float animation */
+}
+
+/* Position the circular text to cover the wrapper */
+.hero-circular-wrapper .circular-text {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 1;
+}
+
+/* Gold styling for circular text letters */
+.hero-circular-wrapper .circular-text span {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  transform-origin: center center !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
+  white-space: nowrap !important;
+}
+
+/* Glassmorphic Logo Containers (Slide 2) */
+.glass-logo-container {
+  flex-shrink: 0;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+.glass-logo-container:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 15px 45px rgba(184, 150, 62, 0.3) !important;
+  border-color: rgba(184, 150, 62, 0.4) !important;
+}
+
+/* Universal Glassmorphic Box Styling across the website */
+.card, 
+.glass-card, 
+.glass-card-light, 
+.stat-item, 
+.dusun-card, 
+.explorer-card,
+.explorer-grid > div {
+  background: rgba(10, 16, 12, 0.65) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(184, 150, 62, 0.2) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45) !important;
+  border-radius: 16px !important;
+  color: #f4efe6 !important;
+  transition: all 0.3s ease;
+}
+
+/* Override card hover — keep dark glass, NOT white */
+.card:hover,
+.glass-card:hover,
+.glass-card-light:hover {
+  background: rgba(10, 16, 12, 0.78) !important;
+  transform: translateY(-6px);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(184, 150, 62, 0.3) !important;
+  border-color: rgba(184, 150, 62, 0.35) !important;
+}
+
+/* Text overrides inside glassmorphic boxes for high readability */
+.card *,
+.glass-card *,
+.glass-card-light *,
+.stat-item *,
+.dusun-card *,
+.explorer-card *,
+.explorer-grid > div * {
+  color: #f4efe6 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Section header glassmorphism — headings clearly readable over any video background */
+.section-header {
+  background: rgba(8, 14, 10, 0.58) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(184, 150, 62, 0.18) !important;
+  border-radius: 20px !important;
+  padding: 32px 48px !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5) !important;
+  display: block !important;
+  width: fit-content !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+/* Ensure text inside section headers is fully readable */
+.section-header h2 {
+  color: #b8963e !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9) !important;
+}
+.section-header p {
+  color: #f4efe6 !important;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8) !important;
+  opacity: 1 !important;
+}
+
+/* Accent overrides to maintain color-coding inside glassmorphic cards */
+.card .potensi-badge,
+.glass-card-light .potensi-badge {
+  background: rgba(184, 150, 62, 0.18) !important;
+  border: 1px solid rgba(184, 150, 62, 0.3) !important;
+  color: #b8963e !important;
+}
+.stat-item .stat-number {
+  color: #b8963e !important;
+}
+
+

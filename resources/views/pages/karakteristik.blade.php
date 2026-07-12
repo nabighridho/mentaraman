@@ -25,7 +25,7 @@
                 </div>
                 <h3>Letak Geografis</h3>
                 <p>Terletak di Malang Selatan, topografi terdiri dari lembah dan perbukitan, membentang dari dataran tinggi hingga pesisir Samudera Hindia (Pantai Jonggring Saloko). Berjarak ±70 km dari pusat Kota Malang.</p>
-                <ul style="margin-top:16px;list-style:disc;padding-left:20px;color:#6B6560;font-size:0.93rem;line-height:2;">
+                <ul style="margin-top:16px;list-style:disc;padding-left:20px;color:rgba(255, 255, 255, 0.85);font-size:0.93rem;line-height:2;">
                     <li>Luas Wilayah: ±15,12 km²</li>
                     <li>Ketinggian: ±300 mdpl</li>
                     <li>Suhu rata-rata: 18–27°C</li>
@@ -40,7 +40,7 @@
                 </div>
                 <h3>Demografi & Administrasi</h3>
                 <p>Mayoritas bermata pencaharian sebagai petani, pekebun, dan nelayan pesisir. Budaya Mataraman masih kental dalam kehidupan sehari-hari masyarakat desa.</p>
-                <ul style="margin-top:16px;list-style:disc;padding-left:20px;color:#6B6560;font-size:0.93rem;line-height:2;">
+                <ul style="margin-top:16px;list-style:disc;padding-left:20px;color:rgba(255, 255, 255, 0.85);font-size:0.93rem;line-height:2;">
                     <li>Jumlah penduduk: ±5.810 jiwa</li>
                     <li>Kepala Desa: Wasito Hadi</li>
                     <li>3 Dusun: Mentaraman, Gondangrejo, Gondangtowo</li>
